@@ -453,6 +453,12 @@ void OpenNI2Driver::newDepthFrameCallback(sensor_msgs::ImagePtr image)
                 data[i] = static_cast<uint16_t>(data[i] * z_scaling_);
       }
 
+      uint16_t* data = reinterpret_cast<uint16_t*>(&image->data[0]);
+      for (unsigned int i = 0; i < image->width * image->height; ++i)
+        if (data[i] == 0) {
+          data[i] = 10000;
+        }
+
       sensor_msgs::CameraInfoPtr cam_info;
 
       if (depth_registration_)
